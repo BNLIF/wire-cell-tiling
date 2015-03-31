@@ -1,6 +1,7 @@
 #include "WireCellTiling/TileMaker.h"
 
 #include <cmath>
+#include <iostream>
 #include <algorithm> 
 using namespace WireCell;
 
@@ -20,6 +21,9 @@ TileMaker::TileMaker(const WireCell::GeomDataSource& geom)
     wirePitchV = geo.pitch(WireCell::kVtype);
     wirePitchY = geo.pitch(WireCell::kYtype);
 
+    angleUrad = geo.angle(WireCell::kUtype) / units::radian; // explicitly carry 
+    angleVrad = geo.angle(WireCell::kVtype) / units::radian; // value in radians
+
     UdeltaY = wirePitchY/tan(angleUrad);
     VdeltaY = wirePitchY/tan(angleVrad);
 
@@ -28,12 +32,19 @@ TileMaker::TileMaker(const WireCell::GeomDataSource& geom)
     leftEdgeOffsetZval = rightEdgeOffsetZval = 0.0*units::cm;
     firstYwireUoffsetYval = firstYwireVoffsetYval = 0.0 * units::cm;
 
+    std::cerr << "maxHeight=" << maxHeight/units::m << " meter " 
+	      << "angleUrad=" << angleUrad << " radians, " << angleUrad * units::radian/units::degree << " degree "
+	      << "angleVrad=" << angleVrad << " radians, " << angleVrad * units::radian/units::degree << " degree "
+	      << "wirePitchY=" << wirePitchY << " "
+	      <<std::endl;
+
     angleUrad = geo.pitch(WireCell::kUtype)/units::radian;
     angleVrad = geo.pitch(WireCell::kVtype)/units::radian;
 
     UspacingOnWire = std::abs(wirePitchU/sin(angleUrad));
     VspacingOnWire = std::abs(wirePitchV/sin(angleVrad));
 
+    std::cerr << "Tiling..." << std::endl;
     this->constructCells();
 }
 
@@ -52,16 +63,9 @@ CellSelection TileMaker::cells(const WireCell::Wire& wire) const
     return CellSelection();
 }
 
-bool TileMaker::load(const char* filename)
+WireCell::Cell* TileMaker::cell(const WireCell::WireSelection& wires) const
 {
-    return false;
 }
-bool TileMaker::save(const char* filename)
-{
-    return false;
-}
-
-
 
 
 bool TileMaker::formsCell(double UwireYval, double VwireYval)
@@ -505,6 +509,7 @@ void TileMaker::constructCells()
     double Voffset = firstYwireVoffsetYval;
 
     while(Uoffset < maxHeight-((UspacingOnWire-UdeltaY)/2.0)-epsilon) {
+	std::cerr << Uoffset << " " << maxHeight-((UspacingOnWire-UdeltaY)/2.0)-epsilon << " " << UspacingOnWire << std::endl;
 	Uoffset += UspacingOnWire;
     }
     while(Voffset > ((VspacingOnWire+VdeltaY)/2.0)+epsilon) {
@@ -513,6 +518,7 @@ void TileMaker::constructCells()
 
     const int numYwires = Ywires.size();
     for (int ind = 0; ind < numYwires; ++ind) {
+	std::cerr << "Constructing cell chain " << ind << " " << Zval << " " << Uoffset << " " << Voffset << std::endl; 
 	constructCellChain(Zval,Uoffset,Voffset); 
 	Zval += wirePitchY;
 	Uoffset += UdeltaY;
@@ -525,6 +531,8 @@ void TileMaker::constructCells()
 	    Voffset += VspacingOnWire;
 	}
     }
+
+    std::cerr << "Filling wire-cell mesh" << std::endl;
 
     CellMap::iterator it, done = cellmap.end();
     for (it=cellmap.begin(); it != done; ++it) {

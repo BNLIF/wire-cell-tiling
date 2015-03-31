@@ -27,14 +27,6 @@ namespace WireCell {
 
 	virtual ~TilingBase();
 
-	/// Hook to allow loading of tiling from a class-specific file
-	/// format, return true on success. 
-	virtual bool load(const char* filename) { return false; }
-
-	/// Hook to allow saving of tiling to a class-specific file
-	/// format, return true on success.
-	virtual bool save(const char* filename) { return false; }
-
 	/// Must return all wires associated with the given cell
 	virtual WireCell::WireSelection wires(const WireCell::Cell& cell) const = 0;
 	
@@ -42,7 +34,7 @@ namespace WireCell {
 	virtual WireCell::CellSelection cells(const WireCell::Wire& wire) const = 0;
 
 	/// Must the one cell associated with the collection of wires or 0.
-	virtual WireCell::Cell* cells(const WireCell::WireSelection& wires) const = 0;
+	virtual WireCell::Cell* cell(const WireCell::WireSelection& wires) const = 0;
 
     };
 

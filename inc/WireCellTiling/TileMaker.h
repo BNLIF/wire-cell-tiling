@@ -21,12 +21,6 @@ namespace WireCell {
 
 	// base API
 
-	/// Load of tiling from a .wct file.  If null filename is given, will generate.
-	bool load(const char* filename);
-
-	/// Save current tiling the given filename.
-	bool save(const char* filename);
-
 	/// Must return all wires associated with the given cell
 	WireCell::WireSelection wires(const WireCell::Cell& cell) const;
 	
@@ -34,7 +28,7 @@ namespace WireCell {
 	WireCell::CellSelection cells(const WireCell::Wire& wire) const;
 
 	/// Returns the one cell associated with the collection of wires or 0.
-	virtual WireCell::Cell* cells(const WireCell::WireSelection& wires) const = 0;
+	virtual WireCell::Cell* cell(const WireCell::WireSelection& wires) const;
 
     private:
 
