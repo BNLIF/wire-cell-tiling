@@ -421,6 +421,21 @@ static double calcCellArea(std::vector<std::pair<double,double> > vertices)
 }
 
 
+int TileMaker::getUwireID(double Yval, double Zval)
+{
+    return round((Zval/tan(angleUrad) + maxHeight - (firstYwireZval/tan(angleUrad)) - firstYwireUoffsetYval - Yval)/UspacingOnWire);
+}
+int TileMaker::getVwireID(double Yval, double Zval)
+{
+    return round((Zval/tan(angleVrad) - firstYwireZval/tan(angleVrad) - firstYwireVoffsetYval + Yval)/VspacingOnWire);
+}
+
+int TileMaker::getYwireID(double Zval)
+{
+    return round((Zval-firstYwireZval)/wirePitchY);
+}
+
+
 void TileMaker::constructCell(double YwireZval, double UwireYval, double VwireYval)
 {
     std::vector<std::pair<double,double> > vertices = getCellVertices(YwireZval,UwireYval,VwireYval);
@@ -440,6 +455,12 @@ void TileMaker::constructCell(double YwireZval, double UwireYval, double VwireYv
     cell.area = calcCellArea(vertices);
     cellset.push_back(cell);
     
+    WireSelection ws;
+    ws.push_back(Uwires[getUwireID(UwireYval,YwireZval)]);
+    ws.push_back(Vwires[getVwireID(VwireYval,YwireZval)]);
+    ws.push_back(Ywires[getYwireID(YwireZval)]);
+    cellmap[&cellset.back()] = ws;
+
     // fixme: need to fill up the wcmap
     //  cell.UwireID = getUwireID(UwireYval,YwireZval);
     //  cell.VwireID = getVwireID(VwireYval,YwireZval);
@@ -502,6 +523,16 @@ void TileMaker::constructCells()
 	}
 	while(Voffset < ((VdeltaY-VspacingOnWire)/2.0)-epsilon) {
 	    Voffset += VspacingOnWire;
+	}
+    }
+
+    CellMap::iterator it, done = cellmap.end();
+    for (it=cellmap.begin(); it != done; ++it) {
+	const Cell* cell = it->first;
+	const WireSelection& wires = it->second;
+	for (size_t ind=0; ind < wires.size(); ++ind) {
+	    const Wire* wire = wires[ind];
+	    wiremap[wire].push_back(cell);
 	}
     }
 }

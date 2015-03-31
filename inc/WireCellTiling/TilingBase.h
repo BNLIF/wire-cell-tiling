@@ -41,6 +41,9 @@ namespace WireCell {
 	/// Must return all cells associated with the given wire
 	virtual WireCell::CellSelection cells(const WireCell::Wire& wire) const = 0;
 
+	/// Must the one cell associated with the collection of wires or 0.
+	virtual WireCell::Cell* cells(const WireCell::WireSelection& wires) const = 0;
+
     };
 
 }
