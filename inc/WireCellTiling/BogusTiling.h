@@ -12,9 +12,9 @@ namespace WireCell {
 	BogusTiling();
 	virtual ~BogusTiling();
 
-	WireCell::WireSelection wires(const WireCell::Cell& cell) const;
-	WireCell::CellSelection cells(const WireCell::Wire& wire) const;
-	virtual WireCell::Cell* cell(const WireCell::WireSelection& wires) const;
+	GeomWireSelection wires(const GeomCell& cell) const;
+	GeomCellSelection cells(const GeomWire& wire) const;
+	virtual GeomCell* cell(const GeomWireSelection& wires) const;
 
     };
 }

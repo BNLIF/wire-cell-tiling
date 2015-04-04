@@ -7,27 +7,27 @@ using namespace WireCell;
 
 const double epsilon = 0.0000000001;
 
-TileMaker::TileMaker(const WireCell::GeomDataSource& geom)
+TileMaker::TileMaker(const GeomDataSource& geom)
     : TilingBase(), geo(geom)
 {
-    Uwires = geo.wires_in_plane(WireCell::kUtype);
-    Vwires = geo.wires_in_plane(WireCell::kVtype);
-    Ywires = geo.wires_in_plane(WireCell::kYtype);
+    Uwires = geo.wires_in_plane(WireCell::kUwire);
+    Vwires = geo.wires_in_plane(WireCell::kVwire);
+    Ywires = geo.wires_in_plane(WireCell::kYwire);
 
     std::vector<float> ext = geo.extent();
     maxHeight = ext[1];
     
-    wirePitchU = geo.pitch(WireCell::kUtype);
-    wirePitchV = geo.pitch(WireCell::kVtype);
-    wirePitchY = geo.pitch(WireCell::kYtype);
+    wirePitchU = geo.pitch(WireCell::kUwire);
+    wirePitchV = geo.pitch(WireCell::kVwire);
+    wirePitchY = geo.pitch(WireCell::kYwire);
 
-    angleUrad = geo.angle(WireCell::kUtype) / units::radian; // explicitly carry 
-    angleVrad = geo.angle(WireCell::kVtype) / units::radian; // value in radians
+    angleUrad = geo.angle(WireCell::kUwire) / units::radian; // explicitly carry 
+    angleVrad = geo.angle(WireCell::kVwire) / units::radian; // value in radians
 
     UdeltaY = wirePitchY/tan(angleUrad);
     VdeltaY = wirePitchY/tan(angleVrad);
 
-    std::pair<float,float> YwireZminmax = geo.minmax(2, WireCell::kYtype);
+    std::pair<float,float> YwireZminmax = geo.minmax(2, WireCell::kYwire);
     firstYwireZval = YwireZminmax.first + 0.5*wirePitchY;
     leftEdgeOffsetZval = rightEdgeOffsetZval = 0.0*units::cm;
     firstYwireUoffsetYval = firstYwireVoffsetYval = 0.0 * units::cm;
@@ -38,8 +38,8 @@ TileMaker::TileMaker(const WireCell::GeomDataSource& geom)
 	      << "wirePitchY=" << wirePitchY << " "
 	      <<std::endl;
 
-    angleUrad = geo.pitch(WireCell::kUtype)/units::radian;
-    angleVrad = geo.pitch(WireCell::kVtype)/units::radian;
+    angleUrad = geo.pitch(WireCell::kUwire)/units::radian;
+    angleVrad = geo.pitch(WireCell::kVwire)/units::radian;
 
     UspacingOnWire = std::abs(wirePitchU/sin(angleUrad));
     VspacingOnWire = std::abs(wirePitchV/sin(angleVrad));
@@ -53,17 +53,17 @@ TileMaker::~TileMaker()
 }
 
 
-WireSelection TileMaker::wires(const WireCell::Cell& cell) const
+GeomWireSelection TileMaker::wires(const GeomCell& cell) const
 {
-    return WireSelection();
+    return GeomWireSelection();
 }
 
-CellSelection TileMaker::cells(const WireCell::Wire& wire) const
+GeomCellSelection TileMaker::cells(const GeomWire& wire) const
 {
-    return CellSelection();
+    return GeomCellSelection();
 }
 
-WireCell::Cell* TileMaker::cell(const WireCell::WireSelection& wires) const
+GeomCell* TileMaker::cell(const GeomWireSelection& wires) const
 {
 }
 
@@ -128,6 +128,15 @@ static std::pair<double, double> getIntersectionY(double ZvalOffset, double Ywir
     return intersectionPoint;
 }
 
+
+
+static bool compareOrientedVertices(std::pair<double,std::pair<double,double> > orientedVertex1,
+				    std::pair<double,std::pair<double,double> > orientedVertex2)
+{
+    return (orientedVertex1.first > orientedVertex2.first);
+}
+
+
 static std::pair<double,double> calcCellCenter(std::vector<std::pair<double,double> > vertices)
 {
     double Zval = 0.0;
@@ -136,8 +145,8 @@ static std::pair<double,double> calcCellCenter(std::vector<std::pair<double,doub
     const int numVertices = vertices.size();
 
     for (int ind = 0; ind < numVertices; ++ind) {
-	Zval += vertices.at(ind).first;
-	Yval += vertices.at(ind).second;
+       Zval += vertices.at(ind).first;
+       Yval += vertices.at(ind).second;
     }  
 
     Zval /= ((double) numVertices);
@@ -150,12 +159,6 @@ static std::pair<double,double> calcCellCenter(std::vector<std::pair<double,doub
     return centerPoint;
 }
 
-
-static bool compareOrientedVertices(std::pair<double,std::pair<double,double> > orientedVertex1,
-				    std::pair<double,std::pair<double,double> > orientedVertex2)
-{
-    return (orientedVertex1.first > orientedVertex2.first);
-}
 
 
 static std::vector<std::pair<double,double> > sortVertices(std::vector<std::pair<double,double> > vertices)
@@ -409,21 +412,6 @@ std::vector<std::pair<double,double> > TileMaker::getCellVertices(double YwireZv
 }
 
 
-static double calcCellArea(std::vector<std::pair<double,double> > vertices)
-{ 
-    double cellArea = 0.0;
-    const int numVertices = vertices.size();
-
-    int prev = numVertices-1;
-    for (int ind = 0; ind < numVertices; ++ind) {
-	cellArea += (vertices.at(prev).first+vertices.at(ind).first)*(vertices.at(prev).second-vertices.at(ind).second); 
-	prev = ind;
-    }
-    cellArea /= 2.0;
-
-    return cellArea;
-}
-
 
 int TileMaker::getUwireID(double Yval, double Zval)
 {
@@ -447,30 +435,22 @@ void TileMaker::constructCell(double YwireZval, double UwireYval, double VwireYv
 	return;
     }
 
-    WireCell::Cell cell;
-    cell.ident = cellset.size();
+    int ident = cellset.size();
+    PointVector boundary;
     for (size_t ind=0; ind<vertices.size(); ++ind) {
 	std::pair<double,double> v = vertices[ind];
-	cell.boundary.push_back(Point(0, v.second, v.first));
+	boundary.push_back(Point(0, v.second, v.first));
     }
-    std::pair<double,double> center = calcCellCenter(vertices);
-    cell.center = Point(0, center.second, center.first);
-
-    cell.area = calcCellArea(vertices);
-    cellset.push_back(cell);
+    std::pair<GeomCellSet::iterator, bool> it = 
+	cellset.insert(GeomCell(ident, boundary));
+    const GeomCell* saved = &(*(it.first));
     
-    WireSelection ws;
+    GeomWireSelection ws;
     ws.push_back(Uwires[getUwireID(UwireYval,YwireZval)]);
     ws.push_back(Vwires[getVwireID(VwireYval,YwireZval)]);
     ws.push_back(Ywires[getYwireID(YwireZval)]);
-    cellmap[&cellset.back()] = ws;
 
-    // fixme: need to fill up the wcmap
-    //  cell.UwireID = getUwireID(UwireYval,YwireZval);
-    //  cell.VwireID = getVwireID(VwireYval,YwireZval);
-    //  cell.YwireID = getYwireID(YwireZval);
-
-    //cell.hitType = kNoHit;
+    cellmap[saved] = ws;
 }
 
 
@@ -534,12 +514,12 @@ void TileMaker::constructCells()
 
     std::cerr << "Filling wire-cell mesh" << std::endl;
 
-    CellMap::iterator it, done = cellmap.end();
+    GeomCellMap::iterator it, done = cellmap.end();
     for (it=cellmap.begin(); it != done; ++it) {
-	const Cell* cell = it->first;
-	const WireSelection& wires = it->second;
+	const GeomCell* cell = it->first;
+	const GeomWireSelection& wires = it->second;
 	for (size_t ind=0; ind < wires.size(); ++ind) {
-	    const Wire* wire = wires[ind];
+	    const GeomWire* wire = wires[ind];
 	    wiremap[wire].push_back(cell);
 	}
     }

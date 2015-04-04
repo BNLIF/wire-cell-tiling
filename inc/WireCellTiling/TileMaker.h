@@ -5,7 +5,7 @@
 
 #include "WireCellNav/GeomDataSource.h"
 
-#include "WireCellData/WireCellMap.h"
+#include "WireCellData/GeomWireCellMap.h"
 
 namespace WireCell {
 
@@ -22,27 +22,27 @@ namespace WireCell {
 	// base API
 
 	/// Must return all wires associated with the given cell
-	WireCell::WireSelection wires(const WireCell::Cell& cell) const;
+	GeomWireSelection wires(const GeomCell& cell) const;
 	
 	/// Must return all cells associated with the given wire
-	WireCell::CellSelection cells(const WireCell::Wire& wire) const;
+	GeomCellSelection cells(const GeomWire& wire) const;
 
 	/// Returns the one cell associated with the collection of wires or 0.
-	virtual WireCell::Cell* cell(const WireCell::WireSelection& wires) const;
+	virtual GeomCell* cell(const GeomWireSelection& wires) const;
 
     private:
 
 	// Our connection to the wire geometry
-	const WireCell::GeomDataSource& geo;
+	const GeomDataSource& geo;
 	// What we make
-	WireCell::CellSet cellset;
-	WireCell::WireMap wiremap;
-	WireCell::CellMap cellmap;
+	GeomCellSet cellset;
+	GeomWireMap wiremap;
+	GeomCellMap cellmap;
 	
 	// Cache some values between methods
-	WireCell::WireSelection Uwires;
-	WireCell::WireSelection Vwires;
-	WireCell::WireSelection Ywires;
+	GeomWireSelection Uwires;
+	GeomWireSelection Vwires;
+	GeomWireSelection Ywires;
 	double maxHeight;
 	double UdeltaY, VdeltaY;
 	double wirePitchU, wirePitchV, wirePitchY;

@@ -1,6 +1,6 @@
 #include "WireCellTiling/BogusTiling.h"
-#include "WireCellData/Cell.h"
-#include "WireCellData/Wire.h"
+#include "WireCellData/GeomCell.h"
+#include "WireCellData/GeomWire.h"
 
 using namespace WireCell;
 
@@ -12,17 +12,17 @@ BogusTiling::~BogusTiling()
 {
 }
 
-WireSelection BogusTiling::wires(const Cell& cell) const
+GeomWireSelection BogusTiling::wires(const GeomCell& cell) const
 {
-    return WireSelection();
+    return GeomWireSelection();
 }
 	
-CellSelection BogusTiling::cells(const Wire& wire) const
+GeomCellSelection BogusTiling::cells(const GeomWire& wire) const
 {
-    return CellSelection();
+    return GeomCellSelection();
 }
 
-Cell* BogusTiling::cell(const WireSelection& wires) const
+GeomCell* BogusTiling::cell(const GeomWireSelection& wires) const
 {
     return 0;
 }

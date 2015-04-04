@@ -3,8 +3,8 @@
 
 
 #include "WireCellNav/GeomDataSource.h"
-#include "WireCellData/Cell.h"
-#include "WireCellData/Wire.h"
+#include "WireCellData/GeomCell.h"
+#include "WireCellData/GeomWire.h"
 
 namespace WireCell {
 
@@ -28,13 +28,13 @@ namespace WireCell {
 	virtual ~TilingBase();
 
 	/// Must return all wires associated with the given cell
-	virtual WireCell::WireSelection wires(const WireCell::Cell& cell) const = 0;
+	virtual GeomWireSelection wires(const GeomCell& cell) const = 0;
 	
 	/// Must return all cells associated with the given wire
-	virtual WireCell::CellSelection cells(const WireCell::Wire& wire) const = 0;
+	virtual GeomCellSelection cells(const GeomWire& wire) const = 0;
 
 	/// Must the one cell associated with the collection of wires or 0.
-	virtual WireCell::Cell* cell(const WireCell::WireSelection& wires) const = 0;
+	virtual GeomCell* cell(const GeomWireSelection& wires) const = 0;
 
     };
 
