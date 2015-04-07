@@ -128,6 +128,13 @@ void addCharges(CellMap &cellMap);
 void assignHitTypes(CellMap &cellMap);
 void drawCellMap(CellMap const& cellMap, Int_t numWires, Int_t numCells);
 
+typedef vector<Wire> WireVector;
+ostream& operator<<(ostream& os, const Wire& wire);
+ostream& operator<<(ostream& os, const WireVector& wire_plane);
+ostream& operator<<(ostream& os, const Cell& cell);
+ostream& operator<<(ostream& os, const vector<Cell>& cells);
+ostream& operator<<(ostream& os, const CellMap& cm);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // main - Main function to run program
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,9 +169,52 @@ Int_t main(Int_t argc, Char_t** argv)
   addCharges(globalCellMap);
   if(plotMode > 0)
     drawCellMap(globalCellMap,-1,-1);
+  else {
+      cout << globalCellMap << endl;
+  }
 
   // End of program
   return 0;
+}
+
+ostream& operator<<(ostream& os, const Wire& wire) 
+{
+    size_t ncells = wire.cellIDs.size();
+    os << "W " << wire.ID << " " << wire.plane << " " << wire.location << " " << ncells;
+    for (size_t ind=0; ind<ncells; ++ind) {
+	os << " " << wire.cellIDs[ind];
+    }
+    return os;
+}
+
+ostream& operator<<(ostream& os, const WireVector& wire_plane)
+{
+    for (size_t ind=0; ind < wire_plane.size(); ++ind) {
+	const Wire& w = wire_plane[ind];
+	os << w << endl;
+    }
+    return os;
+}
+ostream& operator<<(ostream& os, const Cell& cell)
+{
+    os << "C " << cell.ID << " "
+       << cell.UwireID << " " << cell.VwireID << " " << cell.YwireID << " " 
+       << cell.center.first << " " << cell.center.second << " " << cell.area;
+    return os;
+}
+ostream& operator<<(ostream& os, const vector<Cell>& cells)
+{
+    size_t ncells = cells.size();
+    for (size_t ind=0; ind<ncells; ++ind) {
+	const Cell& cell = cells[ind];
+	os << cell << endl;
+    }
+    return os;
+}
+ostream& operator<<(ostream& os, const CellMap& cm) 
+{
+    os << cm.Uwires << cm.Vwires << cm.Ywires << cm.cells;
+    return os;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
