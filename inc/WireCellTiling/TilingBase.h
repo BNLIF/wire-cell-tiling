@@ -34,7 +34,7 @@ namespace WireCell {
 	virtual GeomCellSelection cells(const GeomWire& wire) const = 0;
 
 	/// Must the one cell associated with the collection of wires or 0.
-	virtual GeomCell* cell(const GeomWireSelection& wires) const = 0;
+	virtual const GeomCell* cell(const GeomWireSelection& wires) const = 0;
 
     };
 
