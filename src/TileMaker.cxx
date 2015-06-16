@@ -14,7 +14,7 @@ TileMaker::TileMaker(const GeomDataSource& geom)
     Vwires = geo.wires_in_plane(WireCell::kVwire);
     Ywires = geo.wires_in_plane(WireCell::kYwire);
 
-    std::vector<float> ext = geo.extent();
+    std::vector<double> ext = geo.extent();
     maxHeight = ext[1];
     
     wirePitchU = geo.pitch(WireCell::kUwire);
@@ -27,7 +27,7 @@ TileMaker::TileMaker(const GeomDataSource& geom)
     UdeltaY = wirePitchY/tan(angleUrad);
     VdeltaY = wirePitchY/tan(angleVrad);
 
-    std::pair<float,float> YwireZminmax = geo.minmax(2, WireCell::kYwire);
+    std::pair<double,double> YwireZminmax = geo.minmax(2, WireCell::kYwire);
     firstYwireZval = YwireZminmax.first + 0.5*wirePitchY;
     leftEdgeOffsetZval = rightEdgeOffsetZval = 0.0*units::cm;
     firstYwireUoffsetYval = firstYwireVoffsetYval = 0.0 * units::cm;
