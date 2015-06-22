@@ -6,4 +6,5 @@
 
 #pragma link C++ class WireCell::BogusTiling;
 #pragma link C++ class WireCell::TileMaker;
+#pragma link C++ class WireCell::TilingBase;
 #endif

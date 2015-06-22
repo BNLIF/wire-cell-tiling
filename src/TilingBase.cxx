@@ -3,3 +3,5 @@
 WireCell::TilingBase::~TilingBase() 
 {
 }
+
+ClassImp(WireCell::TilingBase);

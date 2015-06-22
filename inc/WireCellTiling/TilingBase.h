@@ -6,6 +6,8 @@
 #include "WireCellData/GeomCell.h"
 #include "WireCellData/GeomWire.h"
 
+#include "Rtypes.h"		// temporary
+
 namespace WireCell {
 
     /** WireCell::TilingBase - base class for providing a tiling of 2D
@@ -35,6 +37,8 @@ namespace WireCell {
 
 	/// Must the one cell associated with the collection of wires or 0.
 	virtual const GeomCell* cell(const GeomWireSelection& wires) const = 0;
+
+	ClassDef(TilingBase,0);
 
     };
 
