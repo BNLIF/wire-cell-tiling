@@ -1,11 +1,11 @@
 #ifndef WIRECELL_TILEMAKER_H
 #define WIRECELL_TILEMAKER_H
 
-#include "WireCellTiling/TilingBase.h"
-
 #include "WireCellNav/GeomDataSource.h"
 
 #include "WireCellData/GeomWireCellMap.h"
+
+#include "WireCellIface/ICellTiling.h"
 
 namespace WireCell {
 
@@ -14,7 +14,7 @@ namespace WireCell {
 	This class is a transliterated copy of the tile generation
 	code from the original monolithic CellMaker (+Plotter) app.
      */
-    class TileMaker : public TilingBase { 
+    class TileMaker : public ICellTiling { 
     public:
 	TileMaker(const WireCell::GeomDataSource& geom);
 	virtual ~TileMaker();

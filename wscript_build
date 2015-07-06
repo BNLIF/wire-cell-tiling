@@ -1,2 +1,2 @@
 #!/usr/bin/env python
-bld.make_package('WireCellTiling', use='WireCellNav WireCellData')
+bld.make_package('WireCellTiling', use='WireCellNav WireCellUtil WireCellData')

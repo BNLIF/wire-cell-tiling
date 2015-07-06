@@ -8,7 +8,7 @@ using namespace WireCell;
 const double epsilon = 0.0000000001;
 
 TileMaker::TileMaker(const GeomDataSource& geom)
-    : TilingBase(), geo(geom)
+    : geo(geom)
 {
     Uwires = geo.wires_in_plane(WireCell::kUwire);
     Vwires = geo.wires_in_plane(WireCell::kVwire);
