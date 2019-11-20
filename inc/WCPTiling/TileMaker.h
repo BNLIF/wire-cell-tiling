@@ -1,22 +1,22 @@
 #ifndef WIRECELL_TILEMAKER_H
 #define WIRECELL_TILEMAKER_H
 
-#include "WireCellTiling/TilingBase.h"
+#include "WCPTiling/TilingBase.h"
 
-#include "WireCellNav/GeomDataSource.h"
+#include "WCPNav/GeomDataSource.h"
 
-#include "WireCellData/GeomWireCellMap.h"
+#include "WCPData/GeomWCPMap.h"
 
-namespace WireCell {
+namespace WCP {
 
-    /** WireCellTiling::TileMaker - tiling using Michael Mooney's algorithm.
+    /** WCPTiling::TileMaker - tiling using Michael Mooney's algorithm.
 
 	This class is a transliterated copy of the tile generation
 	code from the original monolithic CellMaker (+Plotter) app.
      */
     class TileMaker : public TilingBase { 
     public:
-	TileMaker(const WireCell::GeomDataSource& geom);
+	TileMaker(const WCP::GeomDataSource& geom);
 	virtual ~TileMaker();
 
 	// base API

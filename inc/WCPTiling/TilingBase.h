@@ -2,15 +2,15 @@
 #define WIRECELL_TILINGBASE_H
 
 
-#include "WireCellNav/GeomDataSource.h"
-#include "WireCellData/GeomCell.h"
-#include "WireCellData/GeomWire.h"
+#include "WCPNav/GeomDataSource.h"
+#include "WCPData/GeomCell.h"
+#include "WCPData/GeomWire.h"
 
 #include "Rtypes.h"		// temporary
 
-namespace WireCell {
+namespace WCP {
 
-    /** WireCell::TilingBase - base class for providing a tiling of 2D
+    /** WCP::TilingBase - base class for providing a tiling of 2D
      * space with cells based on planes of parallel wires.
      *
      * A Tiling defines a number of "cells" which completely fill a

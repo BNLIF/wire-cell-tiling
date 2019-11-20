@@ -1,9 +1,9 @@
 #ifndef WIRECELL_BOGUSTILING_H
 #define WIRECELL_BOGUSTILING_H
 
-#include "WireCellTiling/TilingBase.h"
+#include "WCPTiling/TilingBase.h"
 
-namespace WireCell {
+namespace WCP {
     /**
      *  A bogus tiling class that doesn't do anything.
      */

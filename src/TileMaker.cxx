@@ -1,33 +1,33 @@
-#include "WireCellTiling/TileMaker.h"
+#include "WCPTiling/TileMaker.h"
 
 #include <cmath>
 #include <iostream>
 #include <algorithm> 
-using namespace WireCell;
+using namespace WCP;
 
 const double epsilon = 0.0000000001;
 
 TileMaker::TileMaker(const GeomDataSource& geom)
     : TilingBase(), geo(geom)
 {
-    Uwires = geo.wires_in_plane(WireCell::kUwire);
-    Vwires = geo.wires_in_plane(WireCell::kVwire);
-    Ywires = geo.wires_in_plane(WireCell::kYwire);
+    Uwires = geo.wires_in_plane(WCP::kUwire);
+    Vwires = geo.wires_in_plane(WCP::kVwire);
+    Ywires = geo.wires_in_plane(WCP::kYwire);
 
     std::vector<double> ext = geo.extent();
     maxHeight = ext[1];
     
-    wirePitchU = geo.pitch(WireCell::kUwire);
-    wirePitchV = geo.pitch(WireCell::kVwire);
-    wirePitchY = geo.pitch(WireCell::kYwire);
+    wirePitchU = geo.pitch(WCP::kUwire);
+    wirePitchV = geo.pitch(WCP::kVwire);
+    wirePitchY = geo.pitch(WCP::kYwire);
 
-    angleUrad = geo.angle(WireCell::kUwire) / units::radian; // explicitly carry 
-    angleVrad = geo.angle(WireCell::kVwire) / units::radian; // value in radians
+    angleUrad = geo.angle(WCP::kUwire) / units::radian; // explicitly carry 
+    angleVrad = geo.angle(WCP::kVwire) / units::radian; // value in radians
 
     UdeltaY = wirePitchY/tan(angleUrad);
     VdeltaY = wirePitchY/tan(angleVrad);
 
-    std::pair<double,double> YwireZminmax = geo.minmax(2, WireCell::kYwire);
+    std::pair<double,double> YwireZminmax = geo.minmax(2, WCP::kYwire);
     firstYwireZval = YwireZminmax.first + 0.5*wirePitchY;
     leftEdgeOffsetZval = rightEdgeOffsetZval = 0.0*units::cm;
     firstYwireUoffsetYval = firstYwireVoffsetYval = 0.0 * units::cm;
@@ -38,8 +38,8 @@ TileMaker::TileMaker(const GeomDataSource& geom)
 	      << "wirePitchY=" << wirePitchY << " "
 	      <<std::endl;
 
-    angleUrad = geo.pitch(WireCell::kUwire)/units::radian;
-    angleVrad = geo.pitch(WireCell::kVwire)/units::radian;
+    angleUrad = geo.pitch(WCP::kUwire)/units::radian;
+    angleVrad = geo.pitch(WCP::kVwire)/units::radian;
 
     UspacingOnWire = std::abs(wirePitchU/sin(angleUrad));
     VspacingOnWire = std::abs(wirePitchV/sin(angleVrad));

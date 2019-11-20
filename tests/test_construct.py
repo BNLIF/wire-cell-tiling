@@ -2,4 +2,4 @@
 
 import ROOT
 def test_bogus():
-    bogus = ROOT.WireCell.BogusTiling()
+    bogus = ROOT.WCP.BogusTiling()

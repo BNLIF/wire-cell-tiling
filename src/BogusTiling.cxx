@@ -1,8 +1,8 @@
-#include "WireCellTiling/BogusTiling.h"
-#include "WireCellData/GeomCell.h"
-#include "WireCellData/GeomWire.h"
+#include "WCPTiling/BogusTiling.h"
+#include "WCPData/GeomCell.h"
+#include "WCPData/GeomWire.h"
 
-using namespace WireCell;
+using namespace WCP;
 
 BogusTiling::BogusTiling()
 {

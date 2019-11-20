@@ -4,7 +4,7 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
-#pragma link C++ class WireCell::BogusTiling;
-#pragma link C++ class WireCell::TileMaker;
-#pragma link C++ class WireCell::TilingBase;
+#pragma link C++ class WCP::BogusTiling;
+#pragma link C++ class WCP::TileMaker;
+#pragma link C++ class WCP::TilingBase;
 #endif

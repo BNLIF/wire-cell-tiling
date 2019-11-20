@@ -1,7 +1,7 @@
-#include "WireCellTiling/TilingBase.h"
+#include "WCPTiling/TilingBase.h"
 
-WireCell::TilingBase::~TilingBase() 
+WCP::TilingBase::~TilingBase() 
 {
 }
 
-ClassImp(WireCell::TilingBase);
+ClassImp(WCP::TilingBase);
